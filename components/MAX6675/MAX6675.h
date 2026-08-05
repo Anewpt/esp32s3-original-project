@@ -14,8 +14,9 @@
 
   esp_err_t max6675_init(void);
   esp_err_t max6675_read(float *temperature_c);
+  void temperature_task(void *pvParameters);
 
-  #ifdef __cplusplus
+#ifdef __cplusplus
   }
   #endif
 

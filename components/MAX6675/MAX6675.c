@@ -73,15 +73,37 @@ esp_err_t max6675_read(float *temperature_c){
     uint16_t raw = ((uint16_t)transaction.rx_data[0] << 8) | transaction.rx_data[1];
 
     if (raw & (1U << 2)) {
-      ESP_LOGE("MAX6675", "热电偶未连接");
+      //ESP_LOGE("MAX6675", "热电偶未连接");
       return ESP_ERR_INVALID_STATE;
     }
 
     uint16_t code = (raw >> 3) & 0x0FFF;
     *temperature_c = code * 0.25f;
 
-    ESP_LOGI("MAX6675", "raw=0x%04X, code=%u, temperature=%.2f C", raw, code, *temperature_c);
+    //ESP_LOGI("MAX6675", "raw=0x%04X, code=%u, temperature=%.2f C", raw, code, *temperature_c);
     
     return ESP_OK;
 }
 
+void temperature_task(void *pvParameters){
+    while(1){
+
+      float temperature = 0.0f;
+      TickType_t last_wake_time = xTaskGetTickCount();
+
+      esp_err_t err = max6675_read(&temperature);
+
+      if(err == ESP_OK){
+        ESP_LOGI("APP", "teperature=%.2f C", temperature);
+      }
+      else if(err == ESP_ERR_INVALID_STATE){
+        ESP_LOGI("APP", "热电偶断开");
+      }
+      else{
+        ESP_LOGI("APP", "通讯异常");
+      }
+
+      //vTaskDelay(pdMS_TO_TICKS(500));
+      xTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(500));
+    }
+}
