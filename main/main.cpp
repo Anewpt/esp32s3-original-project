@@ -6,6 +6,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "MAX6675.h"
+#include "HT16K33.h"
 
 
 
@@ -27,4 +28,6 @@ extern "C" void app_main(void)
   if(tem != pdPASS){
     ESP_LOGI("APP", "温度任务创建失败");
   }
+
+  ESP_ERROR_CHECK(HT16K33_init());
 }

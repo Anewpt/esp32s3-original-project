@@ -104,6 +104,6 @@ void temperature_task(void *pvParameters){
       }
 
       //vTaskDelay(pdMS_TO_TICKS(500));
-      xTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(500));
+      xTaskDelayUntil(&last_wake_time, pdMS_TO_TICKS(1000));
     }
 }
