@@ -13,7 +13,7 @@
   #endif
 
       esp_err_t HT16K33_init(void);
-      void i2c_scan_f(i2c_port_t i2c_port);
+      //void i2c_scan_f(i2c_port_t i2c_port);
 
 #ifdef __cplusplus
   }

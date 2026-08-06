@@ -4,6 +4,8 @@
 
 static const char *i2c_scan_TAG = "I2C_SCAN";
 
+static void i2c_scan_f(i2c_port_t i2c_port);
+
 esp_err_t HT16K33_init(void){
 
     i2c_config_t conf = {};
@@ -27,17 +29,18 @@ esp_err_t HT16K33_init(void){
     }
 
     i2c_scan_f(I2C_NUM_0);
+
+    return ESP_OK;
 }
 
-void i2c_scan_f(i2c_port_t i2c_port){
+static void i2c_scan_f(i2c_port_t i2c_port){
 
     int device_count = 0;
 
-    uint8_t adress = 0x00;
 
     ESP_LOGI(i2c_scan_TAG, "开始扫描");
 
-    for (adress = 0x08; adress <= 0x77; adress++){
+    for (uint8_t address = 0x08; address <= 0x77; address++){
 
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();
 
