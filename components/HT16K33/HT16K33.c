@@ -3,10 +3,11 @@
 #include "esp_log.h"
 
 static const char *i2c_scan_TAG = "I2C_SCAN";
+static const char *TAG = "HT16K33";
 
 static void i2c_scan_f(i2c_port_t i2c_port);
 
-esp_err_t HT16K33_init(void){
+esp_err_t i2c_bus_init(void){
 
     i2c_config_t conf = {};
     conf.mode = I2C_MODE_MASTER;
@@ -18,17 +19,19 @@ esp_err_t HT16K33_init(void){
 
     esp_err_t err = i2c_param_config(I2C_NUM_0, &conf);
     if(err != ESP_OK){
-        ESP_LOGI("HT16K33", "I2C总线初始化失败");
+        ESP_LOGI(TAG, "I2C总线初始化失败");
         return err;
     }
 
     err = i2c_driver_install(I2C_NUM_0, I2C_MODE_MASTER, 0, 0, 0);
     if(err != ESP_OK){
-        ESP_LOGI("HT16K33", "I2C驱动安装失败");
+        ESP_LOGI(TAG, "I2C驱动安装失败");
         return err;
     }
 
     i2c_scan_f(I2C_NUM_0);
+
+    
 
     return ESP_OK;
 }

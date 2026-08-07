@@ -29,5 +29,5 @@ extern "C" void app_main(void)
     ESP_LOGI("APP", "温度任务创建失败");
   }
 
-  ESP_ERROR_CHECK(HT16K33_init());
+  
 }
