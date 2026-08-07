@@ -57,6 +57,8 @@ static void i2c_scan_f(i2c_port_t i2c_port){
 
         esp_err_t err = i2c_master_cmd_begin(i2c_port, cmd, pdMS_TO_TICKS(20));
 
+        i2c_cmd_link_delete(cmd);
+
         if(err == ESP_OK){
             ESP_LOGI(i2c_scan_TAG, "发现I2C设备：0x%02x", (unsigned int)address);
             device_count++;
