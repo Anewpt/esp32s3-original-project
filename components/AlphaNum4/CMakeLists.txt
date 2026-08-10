@@ -3,5 +3,4 @@ idf_component_register(
     INCLUDE_DIRS "include"
     REQUIRES
         driver
-        HT16K33
 )

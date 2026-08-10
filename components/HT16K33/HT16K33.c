@@ -1,11 +1,17 @@
 #include "HT16K33.h"
 #include "driver/i2c.h"
 #include "esp_log.h"
+#include "MAX6675.h"
 
 static const char *i2c_scan_TAG = "I2C_SCAN";
 static const char *TAG = "HT16K33";
 
 static void i2c_scan_f(i2c_port_t i2c_port);
+
+typedef struct{
+    float temperature_c;
+    esp_err_t status;
+} temperature_sample_t;
 
 esp_err_t i2c_bus_init(void){
 
@@ -74,3 +80,4 @@ static void i2c_scan_f(i2c_port_t i2c_port){
         ESP_LOGI(i2c_scan_TAG, "扫描完成，共发%d个设备", device_count);
     }
 }
+

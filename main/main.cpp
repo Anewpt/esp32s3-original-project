@@ -13,17 +13,18 @@
 extern "C" void app_main(void)
 {
   ESP_ERROR_CHECK(max6675_init());
+  ESP_ERROR_CHECK(i2c_bus_init());
 
-      /* while (true) {
-          float temperature;
+  /* while (true) {
+      float temperature;
 
-          esp_err_t err = max6675_read(&temperature);
-          if (err == ESP_OK) {
-              ESP_LOGI("APP", "温度：%.2f°C", temperature);
-          }
+      esp_err_t err = max6675_read(&temperature);
+      if (err == ESP_OK) {
+          ESP_LOGI("APP", "温度：%.2f°C", temperature);
+      }
 
-          vTaskDelay(pdMS_TO_TICKS(500));
-        } */
+      vTaskDelay(pdMS_TO_TICKS(500));
+    } */
   BaseType_t tem = xTaskCreate(temperature_task, "temperature_task", 2048, NULL, 2, NULL);
   if(tem != pdPASS){
     ESP_LOGI("APP", "温度任务创建失败");

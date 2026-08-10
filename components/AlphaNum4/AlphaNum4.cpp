@@ -1,5 +1,4 @@
 #include "AlphaNum4.h"
-#include "HT16K33.h"
 #include "esp_log.h"
 #include <cstring>
 
