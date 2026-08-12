@@ -8,10 +8,7 @@ static const char *TAG = "HT16K33";
 
 static void i2c_scan_f(i2c_port_t i2c_port);
 
-typedef struct{
-    float temperature_c;
-    esp_err_t status;
-} temperature_sample_t;
+
 
 esp_err_t i2c_bus_init(void){
 

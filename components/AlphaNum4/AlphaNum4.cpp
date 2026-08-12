@@ -4,6 +4,8 @@
 
 static const char *Alpha_TAG = "AlphaNum4";
 
+
+
 AlphaNum4::AlphaNum4()   //C++类初始值，创建类时自动初始化
     : _i2c_port(I2C_NUM_0),
       _i2c_address(0x70),
@@ -58,6 +60,14 @@ esp_err_t AlphaNum4::begin(i2c_port_t i2c_port, uint8_t address){
         return err;
     }
 
+    _initialized = true;
+    clear();
+    err = writeDisplay();
+    if(err != ESP_OK){
+        ESP_LOGE(Alpha_TAG, "初始化清空数码管失败");
+        _initialized = false;
+        return err;
+    }
 
     _initialized = true;
 

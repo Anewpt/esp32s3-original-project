@@ -1,8 +1,6 @@
 #include "MAX6675.h"
 #include "driver/spi_master.h"
 #include "esp_log.h"
-#include "HT16K33.h"
-#include "AlphaNum4.h"
 
 QueueHandle_t temperature_queue;
 uint16_t max6675_temperature_read;
@@ -10,7 +8,7 @@ uint16_t max6675_temperature_read;
 static spi_device_handle_t max6675_handle = NULL;
 
 typedef struct{
-  uint16_t temperatue_c;
+  float temperatue_c;
   esp_err_t status;
 } temperature_sample_t;
 
@@ -120,23 +118,44 @@ esp_err_t max6675_read(float *temperature_c){
 } */
 
 void temperature_write(void){
-  float tem_temperatue = 0.0f;
+  static float tem_temperatue = 0.0f;
   temperature_sample_t input_sample;
   if(max6675_read(&tem_temperatue) == ESP_OK){
-    input_sample.temperatue_c = (uint16_t)(tem_temperatue + 0.5f);
+    input_sample.temperatue_c = (tem_temperatue + 0.5f);
     input_sample.status = ESP_OK;
 
-    xQueuewrite(temperature_queque, &sample);
+    xQueueOverwrite(temperature_queue, &input_sample);
   }
 }
 
-uint16_t temperature_read(void){
+/* uint16_t temperature_read(void){
   temperature_sample_t out_sample;
-  if(xQueueReceive(temperatue_queue, &sample, portMAX_DELAY) == pdTRUE){
-    if(sample.status == ESP_OK){
-      out_sample.temperatue_c = sample.temperature_c;
-      out_sample.status = ESP_OK;
+  if(xQueueReceive(temperature_queue, &out_sample, portMAX_DELAY) == pdTRUE){
+    if(out_sample.status == ESP_OK){
       return out_sample.temperatue_c;
     }
   }
+
+  return 0;
+} */
+
+esp_err_t temperature_read(float *temperature_c){
+
+  temperature_sample_t out_sample;
+
+  if(temperature_c == NULL){
+    return ESP_ERR_INVALID_ARG;
+  }
+
+  if(xQueueReceive(temperature_queue, &out_sample, portMAX_DELAY) != pdTRUE){
+    return ESP_FAIL;
+  }
+
+  if(out_sample.status != ESP_OK){
+    return out_sample.status;
+  }
+
+  *temperature_c = out_sample.temperatue_c;
+
+  return ESP_OK;
 }
